@@ -20,8 +20,6 @@ app.post("/api/users", (req, res) => {
   var username = req.body.username;
   console.log("this is the name: ", username);
   
-  console.log("\nthe body is:", req.body)
-  
     var id = Math.random().toString(36).substr(2, 24); // Generate random ID
     db.push({_id: id, username:username });
     res.json({ username: username, _id: id });
@@ -38,7 +36,10 @@ app.get('/api/users', (req, res) => {
 app.post('/api/users/:_id/exercises', (req, res) => {
   var { _id } = req.params;
   var { description, duration, date } = req.body;
-  
+  console.log("\nThe request is: ",req.body)
+  if (!date) {
+    date = new Date().toDateString();
+  }
 
   var entry = { description, duration: parseInt(duration), date: new Date(date).toDateString() };
   var user = db.find(user => user._id === _id);
@@ -57,6 +58,7 @@ app.post('/api/users/:_id/exercises', (req, res) => {
 // Retrieve exercise logs for a specific user
 app.get('/api/users/:_id/logs', (req, res) => {
   var { _id } = req.params;
+  console.log("\nThe request is: ",req.params)
   var user = db.find(user => user._id === _id);
 
   if (!user) {
